@@ -11,6 +11,8 @@ var User = require('./app/models/user');
 var Links = require('./app/collections/links');
 var Link = require('./app/models/link');
 var Click = require('./app/models/click');
+var bcrypt = require('bcrypt-nodejs');
+
 
 var app = express();
 app.use(bodyParser());
@@ -65,7 +67,7 @@ function(req, res) {
 
 app.get('/logout',
 function(req, res) {
-  res.session.destroy(function() {
+  req.session.destroy(function() {
     res.redirect('/login');
   });
 });
@@ -78,9 +80,21 @@ function(req, res) {
   new User({ username: username }).fetch().then(function(found) {
     if (found) {
       // res.send(200, found.attributes);
-      res.send(200, "<h1>SUCCESS</h1>")
+      if (found.checkPassword(password)) {
+        req.session.regenerate(function() {
+
+          req.session.user = found;
+          res.redirect('/');
+
+        });
+
+      } else {
+        res.redirect('/login');
+
+      }
+
     } else {
-      res.redirect('/signup');
+      res.redirect('/login');
     }
   });
 
@@ -98,12 +112,12 @@ function(req, res) {
 
       var user = new User({
         username: username,
-        tempPassword: password
+        password: password
       });
 
       user.save().then(function(newUser) {
         Users.add(newUser);
-        res.redirect('/login');
+        res.redirect('/');
       });
 
     }

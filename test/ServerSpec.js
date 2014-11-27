@@ -63,7 +63,7 @@ describe('', function() {
 
     var requestWithSession = request.defaults({jar: true});
 
-    xbeforeEach(function(done){      // create a user that we can then log-in with
+    beforeEach(function(done){      // create a user that we can then log-in with
       new User({
           'username': 'Phillip',
           'password': 'Phillip'
@@ -127,7 +127,6 @@ describe('', function() {
               if (urls['0'] && urls['0']['url']) {
                 var foundUrl = urls['0']['url'];
               }
-              console.log(urls);
               expect(foundUrl).to.equal('http://www.roflzoo.com/');
               done();
             });
@@ -202,7 +201,7 @@ describe('', function() {
           'uri': 'http://127.0.0.1:4568/links'
         };
 
-        requestWithSession(options, function(error, res, body) {
+        requestWithSession(options, function(error, res, body) { // Funny animal pictures, funny animals, funniest dog
           expect(body).to.include('"title":"Rofl Zoo - Daily funny animal pictures"');
           expect(body).to.include('"code":"' + link.get('code') + '"');
           done();
@@ -238,7 +237,7 @@ describe('', function() {
 
   }); // 'Priviledged Access'
 
-  xdescribe('Account Creation:', function(){
+  describe('Account Creation:', function(){
 
     it('Signup creates a user record', function(done) {
       var options = {
@@ -286,7 +285,7 @@ describe('', function() {
 
   }); // 'Account Creation'
 
-  xdescribe('Account Login:', function(){
+  describe('Account Login:', function(){
 
     var requestWithSession = request.defaults({jar: true});
 

@@ -10,13 +10,17 @@ var User = db.Model.extend({
     db.Model.call(this, arguments[0]);
   },
 
-  initialize: function(params){
-    console.log('PARAMS');
-    console.log(params);
-    this.on('creating', function(model, attrs, options){
-      var hash = bcrypt.hashSync(params.tempPassword);
+  initialize: function(){
+    this.on('creating', function(model, attrs, options) {
+      var hash = bcrypt.hashSync(model.get('password'));
       model.set('password', hash);
     });
+  },
+
+  checkPassword: function(inputtedPassword) {
+
+    return bcrypt.compareSync(inputtedPassword, this.get('password'));
+
   }
 });
 
